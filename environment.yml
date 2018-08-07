@@ -1,4 +1,4 @@
-name: WebScraping
+name: Grocery
 channels:
   - defaults
 dependencies:
