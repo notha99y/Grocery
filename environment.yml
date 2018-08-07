@@ -1,0 +1,14 @@
+name: WebScraping
+channels:
+  - defaults
+dependencies:
+  - pip
+  - requests
+  - beautifulsoup4
+  - numpy
+  - pandas
+  - matplotlib
+  - python
+  - pillow
+  - bokeh
+  - scipy=1.0.0
