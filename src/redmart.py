@@ -9,11 +9,17 @@ import requests
 import json
 import time
 import math
-import click
 import os
+import datetime
 
-# filename = str(time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime()))
-filename = "data"
+now = datetime.datetime.now()
+date = str(now.year).zfill(4) + str(now.month).zfill(2) + str(now.day).zfill(2)
+
+
+# FILENAME = str(time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime()))
+FILENAME = date + "_data"
+FMT = '.json'
+SAVEPATH = os.path.join(os.getcwd(), 'data', 'raw', FILENAME+FMT)
 
 VERSION = 'v1.6.0'
 PAGESIZE = 100
@@ -27,8 +33,6 @@ def requestForProducts(val, page):
     return data
 
 
-# @click.command()
-@click.argument('output_filepath', type=click.Path(exists=True))
 def main(output_filepath):
     startTime = time.time()
 
@@ -37,7 +41,7 @@ def main(output_filepath):
     data = json.loads(r.text)  # similarily can use data = r.json()
 
     # uri = [x['uri'] for x in data['categories']]
-    uriDict = {}
+    uriDict = {}  # Uniform Resource Identifier
     for x in data['categories']:
         for y in x['children']:
             try:
@@ -48,19 +52,23 @@ def main(output_filepath):
     for key in uriDict:
         for val in uriDict[key]:
             data = requestForProducts(val, 0)
-            time.sleep(0.5)
-            try:
-                # print('[Category]', str(val), 'Total', data['total'], 'Page', data['page'], 'Page Size', data['page_size'])
-                print('[Category]', str(val), '[Total items]', data['total'])
-            except KeyError:
-                continue
-            else:
-                pass
+            sleep_time = 5  # in units of seconds
+            print("Sleep for {} secs".format(sleep_time))
+            time.sleep(sleep_time)
+            print('[Category]', str(val), '[Total items]', data['total'])
+            # try:
+            #     # print('[Category]', str(val), 'Total', data['total'], 'Page', data['page'], 'Page Size', data['page_size'])
+            #     print('[Category]', str(val), '[Total items]', data['total'])
+            # except KeyError:
+            #     continue
+            # else:
+            #     pass
+
             if data['total'] <= 100:
                 # print(data['products'][0]['title'])
                 for product in data['products']:
                     productsDict[product['title']] = product
-            else:
+            else:  # crawl to next page
                 pages = math.ceil(data['total'] / PAGESIZE)
                 for page in range(pages):
                     try:
@@ -71,8 +79,9 @@ def main(output_filepath):
                     except KeyError:
                         pass
         print(len(productsDict))
-        # print("./data/raw/{}.txt".format(filename))
-        with open('./data/raw/{}.json'.format(filename), 'w+') as fp:
+        # print("./data/raw/{}.txt".format(FILENAME))
+        with open(SAVEPATH, 'w+') as fp:
+            print("writing into json: {}".format(os.path.abspath(SAVEPATH)))
             try:
                 existingProductsDict = json.load(fp)
                 existingProductsDict.update(productsDict)
@@ -84,4 +93,4 @@ def main(output_filepath):
 
 
 if __name__ == '__main__':
-    main()
+    main('.')
