@@ -27,13 +27,13 @@ def requestForProducts(val, page):
     return data
 
 
-@click.command()
+# @click.command()
 @click.argument('output_filepath', type=click.Path(exists=True))
 def main(output_filepath):
     startTime = time.time()
 
     r = requests.get(
-        'https://api.redmart.com/{}/catalog/search?extent=0&depth=1'.format(VERSION)) # gives the category
+        'https://api.redmart.com/{}/catalog/search?extent=0&depth=1'.format(VERSION))  # gives the category
     data = json.loads(r.text)  # similarily can use data = r.json()
 
     # uri = [x['uri'] for x in data['categories']]
