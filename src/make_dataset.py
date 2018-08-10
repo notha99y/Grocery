@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
-import click
 import logging
 import os
 import glob
-import gzip
 import json
-import io
 import csv
 from pathlib import Path
+
+import click
+
 from dotenv import find_dotenv, load_dotenv
+from pymongo import MongoClient
+
 
 def getFiles(input_filepath):
     # get name of all the CSV files in /data/raw and store in result list
     os.chdir(input_filepath)
     results = [i for i in glob.glob('*.{}'.format('json'))]
     return results
+
 
 def dataToDict(input_filepath):
     for file in getFiles(input_filepath):
@@ -23,11 +26,12 @@ def dataToDict(input_filepath):
             products = json.load(fp)
     return products
 
+
 def dictToCSV(data):
+    # By inspecting the img tag
     IMAGE_URL = 'https://s3-ap-southeast-1.amazonaws.com/media.redmart.com/newmedia/150x'
     productsList = []
-    pdtCategory = []
-    for pdt, pdtDetails in data.items():
+    for _, pdtDetails in data.items():
         pdtID = pdtDetails['id']
         pdtName = pdtDetails['title']
         pdtDesc = pdtDetails['desc']
@@ -36,16 +40,46 @@ def dictToCSV(data):
         pdtCountryOfOrigin = pdtDetails['details']['country_of_origin']
         try:
             pdtOrganic = pdtDetails['filters']['is_organic']
-        except:
+        except Exception as e:
+
             pdtOrganic = '0'
         pdtMfgName = pdtDetails['filters']['mfr_name']
         pdtBrandName = pdtDetails['filters']['brand_name']
         pdtStockStatus = pdtDetails['inventory']['stock_status']
         pdtURI = pdtDetails['details']['uri']
         pdtCategoryTags = pdtDetails['category_tags']
-        productsList.append([pdtID, pdtName, pdtDesc,pdtImageURL, pdtPrice, pdtCountryOfOrigin, pdtOrganic, pdtMfgName, pdtBrandName, pdtStockStatus, pdtURI, pdtCategoryTags])
+        productsList.append([pdtID, pdtName, pdtDesc, pdtImageURL, pdtPrice, pdtCountryOfOrigin,
+                             pdtOrganic, pdtMfgName, pdtBrandName, pdtStockStatus, pdtURI, pdtCategoryTags])
         # print(pdtID, pdtName, pdtDesc,pdtImageURL, pdtPrice, pdtCountryOfOrigin, pdtOrganic, pdtMfgName, pdtBrandName, pdtStockStatus)
     return productsList
+
+
+def data_extraction_to_mongodb(data):
+    client = MongoClient()
+    db = client.Grocery
+    redmart = db.redmart
+    for pdtDetails in data.values():
+        IMAGE_URL = 'https://s3-ap-southeast-1.amazonaws.com/media.redmart.com/newmedia/150x'
+        try:
+            pdtOrganic = pdtDetails['filters']['is_organic']
+        except Exception as e:
+            pdtOrganic = '0'
+        row = {
+            'pdtID': pdtDetails['id'],
+            'pdtName': pdtDetails['title'],
+            'pdtDesc': pdtDetails['desc'],
+            'pdtImageURL': IMAGE_URL + str(pdtDetails['img']['name']),
+            'pdtPrice': pdtDetails['pricing']['price'],
+            'pdtCountryOfOrigin': pdtDetails['details']['country_of_origin'],
+            'pdtOrganic': pdtOrganic,
+            'pdtMfgName': pdtDetails['filters']['mfr_name'],
+            'pdtBrandName': pdtDetails['filters']['brand_name'],
+            'pdtStockStatus': pdtDetails['inventory']['stock_status'],
+            'pdtURI': pdtDetails['details']['uri'],
+            'pdtCategoryTags': pdtDetails['category_tags']
+        }
+        redmart.insert(row)
+
 
 def toCSV(productsList, output_filepath):
     os.chdir(os.path.dirname(os.getcwd()) + '/processed')
@@ -53,6 +87,7 @@ def toCSV(productsList, output_filepath):
         wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
         for product in productsList:
             wr.writerow(product)
+
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
@@ -67,6 +102,7 @@ def main(input_filepath, output_filepath):
 
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
+
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
