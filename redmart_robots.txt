@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /cart
+Disallow: /list
+Disallow: /account
+Disallow: /orders
+
+# Sitemap files
+Sitemap: https://redmart.com/sitemap.xml
+Sitemap: http://redmart.com/sitemap/categories_sitemap.xml.gz
+Sitemap: http://redmart.com/sitemap/products_sitemap_1.xml.gz
+Sitemap: http://redmart.com/sitemap/products_sitemap_2.xml.gz
+Sitemap: http://redmart.com/sitemap/products_sitemap_3.xml.gz
+Sitemap: http://redmart.com/sitemap/themes_sitemap.xml.gz
+Sitemap: http://redmart.com/sitemap/stores_sitemap.xml.gz
+Sitemap: http://redmart.com/sitemap/brands_sitemap.xml.gz

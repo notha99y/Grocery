@@ -1,0 +1,37 @@
+User-agent: *
+Disallow: /OrderItemDisplay
+Disallow: /OrderShippingBillingView
+Disallow: /ProcessPaymentView
+Disallow: /SingleShipmentOrderSummaryView
+Disallow: /OrderShippingBillingConfirmationView
+Disallow: /OrderDetail
+Disallow: /TrackOrderStatus
+Disallow: /UserRegistrationForm
+Disallow: /CouponWallet
+Disallow: /TrackOrderStatus
+Disallow: /MyMembershipPage
+Disallow: /AddressBookForm
+Disallow: /UserCreditCardManageView
+Disallow: /ELuckyDrawIconView
+Disallow: /WishListDisplayView
+Disallow: /SharedWishListView
+Disallow: /AjaxCheckoutDisplayView
+Disallow: /webapp/wcs/stores/servlet/OrderItemDisplay
+Disallow: /webapp/wcs/stores/servlet/OrderShippingBillingView
+Disallow: /webapp/wcs/stores/servlet/ProcessPaymentView
+Disallow: /webapp/wcs/stores/servlet/SingleShipmentOrderSummaryView
+Disallow: /webapp/wcs/stores/servlet/OrderShippingBillingConfirmationView
+Disallow: /webapp/wcs/stores/servlet/OrderDetail
+Disallow: /webapp/wcs/stores/servlet/TrackOrderStatus
+Disallow: /webapp/wcs/stores/servlet/UserRegistrationForm
+Disallow: /webapp/wcs/stores/servlet/CouponWallet
+Disallow: /webapp/wcs/stores/servlet/TrackOrderStatus
+Disallow: /webapp/wcs/stores/servlet/MyMembershipPage
+Disallow: /webapp/wcs/stores/servlet/AddressBookForm
+Disallow: /webapp/wcs/stores/servlet/UserCreditCardManageView
+Disallow: /webapp/wcs/stores/servlet/ELuckyDrawIconView
+Disallow: webapp/wcs/stores/servlet/WishListDisplayView
+Disallow: /webapp/wcs/stores/servlet/SharedWishListView
+
+
+
