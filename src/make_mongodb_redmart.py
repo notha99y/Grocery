@@ -12,7 +12,8 @@ if __name__ == '__main__':
     print("Please select a raw data.json to put into mongodb")
     for i, file in enumerate(raw_jsons):
         print('[{}]: {}'.format(i, file))
-    selected = int(input("Input number from 0 - {}: ".format(len(raw_jsons))))
+    selected = int(
+        input("Input number from 0 - {}: ".format(len(raw_jsons) - 1)))
     print("selected [{}]: {}".format(selected, raw_jsons[selected]))
     # time.sleep(5)
     with open(raw_jsons[selected]) as fp:
