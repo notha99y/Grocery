@@ -11,4 +11,5 @@ dependencies:
   - python
   - pillow
   - bokeh
-  - scipy=1.0.0
+  - pymongo
+  - selenium
