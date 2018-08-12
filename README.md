@@ -12,6 +12,7 @@ git clone https://github.com/notha99y/Grocery.git
 ```
 2. Set up conda environment
 ```
+cd Grocery
 conda env create -f=environment.yml
 ```
 
