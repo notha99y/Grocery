@@ -30,6 +30,7 @@ if __name__ == '__main__':
             pdtOrganic = '0'
         row = {
             'pdtID': pdtDetails['id'],
+            'pdtSKU': pdtDetails['sku'],
             'pdtName': pdtDetails['title'],
             'pdtDesc': pdtDetails['desc'],
             'pdtImageURL': IMAGE_URL + str(pdtDetails['img']['name']),

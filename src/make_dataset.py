@@ -33,6 +33,7 @@ def dictToCSV(data):
     productsList = []
     for _, pdtDetails in data.items():
         pdtID = pdtDetails['id']
+        pdtSKU = pdtDetails['sku']
         pdtName = pdtDetails['title']
         pdtDesc = pdtDetails['desc']
         pdtImageURL = IMAGE_URL + str(pdtDetails['img']['name'])
@@ -52,33 +53,6 @@ def dictToCSV(data):
                              pdtOrganic, pdtMfgName, pdtBrandName, pdtStockStatus, pdtURI, pdtCategoryTags])
         # print(pdtID, pdtName, pdtDesc,pdtImageURL, pdtPrice, pdtCountryOfOrigin, pdtOrganic, pdtMfgName, pdtBrandName, pdtStockStatus)
     return productsList
-
-
-def data_extraction_to_mongodb(data):
-    client = MongoClient()
-    db = client.Grocery
-    redmart = db.redmart
-    for pdtDetails in data.values():
-        IMAGE_URL = 'https://s3-ap-southeast-1.amazonaws.com/media.redmart.com/newmedia/150x'
-        try:
-            pdtOrganic = pdtDetails['filters']['is_organic']
-        except Exception as e:
-            pdtOrganic = '0'
-        row = {
-            'pdtID': pdtDetails['id'],
-            'pdtName': pdtDetails['title'],
-            'pdtDesc': pdtDetails['desc'],
-            'pdtImageURL': IMAGE_URL + str(pdtDetails['img']['name']),
-            'pdtPrice': pdtDetails['pricing']['price'],
-            'pdtCountryOfOrigin': pdtDetails['details']['country_of_origin'],
-            'pdtOrganic': pdtOrganic,
-            'pdtMfgName': pdtDetails['filters']['mfr_name'],
-            'pdtBrandName': pdtDetails['filters']['brand_name'],
-            'pdtStockStatus': pdtDetails['inventory']['stock_status'],
-            'pdtURI': pdtDetails['details']['uri'],
-            'pdtCategoryTags': pdtDetails['category_tags']
-        }
-        redmart.insert(row)
 
 
 def toCSV(productsList, output_filepath):
