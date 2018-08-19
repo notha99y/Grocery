@@ -3,6 +3,8 @@ import json
 import time
 import math
 import os
+import re
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -14,7 +16,7 @@ BASE_URL = 'https://www.fairprice.com.sg/'
 
 def requestForPage(url):
     # headers = {'User-Agent': ''}
-    r = requests.get(url, headers=random_headers())
+    r = requests.get(url, headers=random_headers(), timeout=5)
     return r.text
 
 
@@ -25,7 +27,7 @@ def main():
     # soup = BeautifulSoup(open('fairprice.html'), 'html.parser')
 
     # Live Server
-    soup = BeautifulSoup(requestForPage(BASE_URL), 'html.parser')
+    soup = BeautifulSoup(requestForPage(BASE_URL), 'lxml')
 
     topLevelLinks = set([link.get('href')
                          for link in soup.find_all('a', {'class': 'selSecondNav'})])
@@ -55,26 +57,33 @@ def main():
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--window-size=1920x1080")
-    chrome_driver = os.getcwd() + '/chromedriver'
+    chrome_driver = os.path.join(
+        os.getcwd(), '..', 'WebScraping', 'seleniumdrivers', 'chromedriver')
+    # print(chrome_driver)
     browser = webdriver.Chrome(
         chrome_options=chrome_options, executable_path=chrome_driver)
-
-    # allCategoryRootLinks = ['https://www.fairprice.com.sg/chilled-frozen/frozen-food/ready-meals']
 
     for rootCategory in allCategoryRootLinks:
         browser.get(rootCategory)
         assert 'FairPrice' in browser.title
+        print("====================")
         print(rootCategory)
         pageSize = 0
+        soup = BeautifulSoup(browser.page_source, 'lxml')
         while True:
             if 'prodLoadMoreBck hide_element'in browser.page_source:
+                print("Hide Element")
+
                 break
-            elif 'prodLoadMoreBck' in browser.page_source:
+            elif 'prodLoadMoreBck' in browser.page_source and soup.find('div', id='noFilterMsg')['class'][0] == 'hidden':
+                print("need to click")
                 try:
                     browser.find_element_by_link_text('LOAD MORE').click()
                 except:
+                    print("didnt manage to click")
                     pass
-        soup = BeautifulSoup(browser.page_source, 'html.parser')
+            else:
+                break
 
         #### Start - Getting all the products in the category ####
         allProductLinksinCategory = []
