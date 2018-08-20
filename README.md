@@ -75,6 +75,7 @@ Somethings you do can with the Redmart Scripts
 ```
 python src/redmart.py
 ```
+The redmart collection is roughly 60 MB in size and have ~ 62,000 unique items
 - Extract data into MongoDB
     - This would extract the relevant information from the raw json data and add it into MongoDB. 
     - The extracted data will be saved into a db called Grocery and in a collection called redmart
@@ -91,11 +92,11 @@ Go Full Screen for maximum viewing pleasure.
 
 
 # FairPrice
-The FairPrice Script takes roughly 45 mins and 1.5 kB in size. <br>
+The FairPrice Script takes roughly 45 mins and would create collection called fairprice of ~6 MB in size with ~6,500 unique items. <br>
 In order to run the script, you would need to do the following:
 - Get Selenium Chromedriver [download here](https://chromedriver.storage.googleapis.com/index.html?path=2.41/)
 - Unzip the chromedriver
-- Set the chrome_driver variable in line 61 of fairprice.py to the path of your downloaded chromedriver
+- Set the chrome_driver variable in line 65 of utils.py to the path of your downloaded chromedriver
 
 With these, you are ready to run. The script would given you the following outputs:
 - date_links.csv (36 mins): csv file which contains all the product links 
@@ -135,7 +136,12 @@ show collections
 db.redmart.find().count()
 ```
 
-5. Drop collections
+5. Get Data Size
+```
+db.redmart.dataSize()
+```
+
+6. Drop collections
 ```
 db.redmart.drop()
 ```
