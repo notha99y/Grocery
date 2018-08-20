@@ -28,6 +28,11 @@ if __name__ == '__main__':
             pdtOrganic = pdtDetails['filters']['is_organic']
         except Exception as e:
             pdtOrganic = '0'
+        try:
+            pdtPromoPrice = pdtDetails['pricing']['promo_price']
+        except Exception as e:
+            pdtPromoPrice = '0'
+
         row = {
             'pdtID': pdtDetails['id'],
             'pdtSKU': pdtDetails['sku'],
@@ -35,6 +40,7 @@ if __name__ == '__main__':
             'pdtDesc': pdtDetails['desc'],
             'pdtImageURL': IMAGE_URL + str(pdtDetails['img']['name']),
             'pdtPrice': pdtDetails['pricing']['price'],
+            'pdtPromoPrice': pdtPromoPrice,
             'pdtCountryOfOrigin': pdtDetails['details']['country_of_origin'],
             'pdtOrganic': pdtOrganic,
             'pdtMfgName': pdtDetails['filters']['mfr_name'],
@@ -43,4 +49,3 @@ if __name__ == '__main__':
             'pdtURI': pdtDetails['details']['uri'],
             'pdtCategoryTags': pdtDetails['category_tags']
         }
-        redmart.insert(row)

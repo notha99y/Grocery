@@ -21,8 +21,8 @@ With this, you are set to do webscraping and some simple data analysis
 # RedMart
 Somethings you do can with the Redmart Scripts
 
-- Scrap Redmart 
-    - This would create a project directory called data/raw, scraps the redmart webpage and saves it into a .json file
+- Scrape Redmart 
+    - This would create a project directory called data/raw, scrapes the redmart webpage and saves it into a .json file
     - This would take roughly 10 mins (depending on your internet speed and redmart servers) The .json file would be rougly 200 MB in size
 ```
 python src/redmart.py
