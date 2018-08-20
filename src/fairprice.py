@@ -110,7 +110,7 @@ def main():
         pdtDict['Title'] = pdtTitle
         pdtWeightVol = soup.find('span',
                                  class_='pdt_weightMg').text.strip()
-        pdtDict['Weight/Volumne'] = pdtWeightVol
+        pdtDict['Weight_Volume'] = pdtWeightVol
         pdtDict['Price'] = soup.find('span', class_='pdt_C_price').text.strip()
         pdtDict['Key Info'] = soup.find(
             'div', class_='pdt_desc_d_row pdpDesc clearfix').p.text.strip().split('•')[1:]
