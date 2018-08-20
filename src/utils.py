@@ -42,5 +42,33 @@ def log_error(e):
     print(e)
 
 
+def requestForPage(url):
+    '''
+    Uses the requests libray and random_headers function
+    to perform a GET request and return a page in text.
+    The timeout per GET request is set to 5 secs
+    '''
+    # headers = {'User-Agent': ''}
+    r = requests.get(url, headers=random_headers(), timeout=5)
+    return r.text
+
+
+def getBrowser():
+    '''
+    Uses Selenium and a pre-installed selenium chrome driver.
+    Returns a haedless chrome browser  of window size 19200x1080 
+    controlled by selenium
+    '''
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--window-size=1920x1080")
+    chrome_driver = os.path.join(
+        os.getcwd(), 'seleniumdrivers', 'chromedriver')
+    # print(chrome_driver)
+    browser = webdriver.Chrome(
+        chrome_options=chrome_options, executable_path=chrome_driver)
+    return browser
+
+
 if __name__ == '__main__':
     pass

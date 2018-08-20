@@ -2,6 +2,51 @@
 This repo contains scripts to do web scraping of e-commerce grocery web pages. <br>
 This is done merely as a school project and we adhere to the robots.txt and ethics of being a [good webscrapper](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01). <br>
 
+# Project Directory
+The project directory would look something like this after a few rounds of scraping.
+
+```
+├── config
+├── data
+│   ├── fairprice
+│   │   └── raw
+│   │       └── 20180820_links.csv
+│   └── redmart
+│       ├── processed
+│       │   └── data.csv
+│       └── raw
+│           ├── 20180809_data.json
+│           ├── 20180811_data.json
+│           ├── 20180812_data.json
+│           ├── 20180813_data.json
+│           ├── 20180814_data.json
+│           ├── 20180818_data.json
+│           └── 20180820_data.json
+├── environment.yml
+├── LICENSE
+├── log
+├── notebook
+│   ├── FairPrice Exploratory.ipynb
+│   ├── MongoDB.ipynb
+│   ├── narrative-python.ipynb
+│   └── Redmart Exploratory .ipynb
+├── pictures
+├── README.md
+├── report
+├── robots
+│   ├── fairprice_robots.txt
+│   └── redmart_robots.txt
+├── seleniumdrivers
+│   └── chromedriver
+└── src
+    ├── fairprice.py
+    ├── make_dataset.py
+    ├── make_mongodb_redmart.py
+    ├── redmart.py
+    └── utils.py
+
+```
+
 # Requirements
 In order to run the code, you would need to have [Anaconda3](https://www.anaconda.com/download/) installed. 
 
@@ -18,6 +63,9 @@ conda env create -f=environment.yml
 
 With this, you are set to do webscraping and some simple data analysis
 
+# Dockerfile
+TODO
+
 # RedMart
 Somethings you do can with the Redmart Scripts
 
@@ -33,6 +81,61 @@ python src/redmart.py
 ```
 python src/make_mongodb_redmart.py
 ```
+## Tableau Analysis
+[Interactive Dashboard](https://tinyurl.com/redmart-MILE) ( <-- Click )
+
+Go Full Screen for maximum viewing pleasure.
+
+### Screenshot of Dashboard
+![redmart_analysis](pictures/redmart_dashboard.jpg)
+
 
 # FairPrice
-The FairPrice Script takes roughly 45 mins and 1.5 kB in size.
+The FairPrice Script takes roughly 45 mins and 1.5 kB in size. <br>
+In order to run the script, you would need to do the following:
+- Get Selenium Chromedriver [download here](https://chromedriver.storage.googleapis.com/index.html?path=2.41/)
+- Unzip the chromedriver
+- Set the chrome_driver variable in line 61 of fairprice.py to the path of your downloaded chromedriver
+
+With these, you are ready to run. The script would given you the following outputs:
+- date_links.csv (36 mins): csv file which contains all the product links 
+- A Grocery MongoDB with a fairprice collection of product documents
+
+```
+python src/fairprice.py
+```
+
+# Cold Storage
+TODO
+
+# MongoDB
+We could run some commands using the MongoDB shell. <br> Alternatively, the default MongoDB GUI called [Compass](https://www.mongodb.com/download-center?jmp=hero#compass) could do the job.  
+1. Open MongoDB shell
+```
+mongo
+```
+2. Show databases
+    - You should see a db called Grocery
+```
+show dbs
+```
+
+3. Show collections
+    - This would display the two collections:
+        1. fairprice
+        2. redmart
+```
+use Grocery
+show collections
+```
+
+4. Count Query
+    - We can count the number of items in the collections
+```
+db.redmart.find().count()
+```
+
+5. Drop collections
+```
+db.redmart.drop()
+```

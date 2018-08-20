@@ -2,25 +2,20 @@ import requests
 import time
 import os
 import re
+import glob
 
 import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from utils import random_headers, make_dir, log_error
+from utils import random_headers, make_dir, log_error, getBrowser, requestForPage
 
 from pymongo import MongoClient
 filename = "data"
 BASE_URL = 'https://www.fairprice.com.sg/'
 
 
-def requestForPage(url):
-    # headers = {'User-Agent': ''}
-    r = requests.get(url, headers=random_headers(), timeout=5)
-    return r.text
-
-
-def main():
+def getProductLinks():
     startTime = time.time()
 
     # Default File
@@ -55,14 +50,7 @@ def main():
     # soup = BeautifulSoup(open('home-care_liquid-detergents_delicate.html'), 'html.parser')
 
     #### Selenium start ####
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--window-size=1920x1080")
-    chrome_driver = os.path.join(
-        os.getcwd(), '..', 'WebScraping', 'seleniumdrivers', 'chromedriver')
-    # print(chrome_driver)
-    browser = webdriver.Chrome(
-        chrome_options=chrome_options, executable_path=chrome_driver)
+    browser = getBrowser()
 
     #### Start - Getting all the products in the category ####
     allProductLinksinCategory = []
@@ -100,7 +88,7 @@ def main():
     print("total time taken: ", time.time() - startTime)
     print("saving links")
 
-    SAVEPATH = os.path.join(os.getcwd(), 'data', 'fairprice' 'raw')
+    SAVEPATH = os.path.join(os.getcwd(), 'data', 'fairprice', 'raw')
 
     NOW = datetime.datetime.now()
     DATE = str(NOW.year).zfill(4) + \
@@ -115,6 +103,31 @@ def main():
         print("writing into csv: {}".format(os.path.abspath(SAVENAME)))
         for productLink in allProductLinksinCategory:
             fp.write(productLink + '\n')
+    return allProductLinksinCategory, browser
+
+
+def main():
+    res = input(
+        "Do you have a current .csv of product links you wish to load? (y/n): ")
+    if res == 'y':
+        browser = getBrowser()
+        DATA_PATH = os.path.join(os.getcwd(), 'data', 'fairprice', 'raw')
+        files = glob.glob(os.path.join(DATA_PATH, '*.csv'))
+        for i, fp in enumerate(files):
+            print("[{}]: {}".format(i, fp))
+        chosen = int(
+            input("Please choose a file: [0] - [{}]: ".format(len(files) - 1)))
+        chosen_fp = files[chosen]
+        print("Selected [{}]: {}".format(chosen, chosen_fp))
+
+        with open(chosen_fp, 'r+') as fp:
+            allProductLinksinCategory = []
+            for link in fp.readlines():
+                allProductLinksinCategory.append(link.strip())
+    else:
+        print("Generating a .csv of product links to scrape from.")
+        print("This would rougly take around 35 mins depending on your")
+        allProductLinksinCategory, browser = getProductLinks()
 
     # Start - Getting all attributes in product links
     client = MongoClient()
@@ -132,7 +145,11 @@ def main():
         pdtDict['Title'] = pdtTitle
         pdtWeightVol = soup.find('span',
                                  class_='pdt_weightMg').text.strip()
-        pdtDict['Weight_Volume'] = pdtWeightVol
+        try:
+            pdtDict['Weight_Volume'] = pdtWeightVol
+        except:
+            pdtDict['Weight_Volume'] = "NA"
+
         pdtDict['Selling_Price'] = soup.find(
             'span', class_='pdt_C_price').text.strip()
         try:
