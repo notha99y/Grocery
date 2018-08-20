@@ -1,7 +1,5 @@
 import requests
-import json
 import time
-import math
 import os
 import re
 
@@ -10,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from utils import random_headers, make_dir, log_error
 
+from pymongo import MongoClient
 filename = "data"
 BASE_URL = 'https://www.fairprice.com.sg/'
 
@@ -62,7 +61,6 @@ def main():
     # print(chrome_driver)
     browser = webdriver.Chrome(
         chrome_options=chrome_options, executable_path=chrome_driver)
-
     for rootCategory in allCategoryRootLinks:
         browser.get(rootCategory)
         assert 'FairPrice' in browser.title
@@ -97,6 +95,40 @@ def main():
         for count, x in enumerate(allProductLinksinCategory):
             print(count, x)
         #### End - Getting all products in category ####
+
+    # Start - Getting all attributes in product links
+    client = MongoClient()
+    db = client.Grocery
+    fairprice = db.fairprice
+    for productLink in allProductLinksinCategory:
+        pdtDict = dict()
+        # print(productLink)
+        browser.get(productLink)
+        soup = BeautifulSoup(browser.page_source, 'lxml')
+        image_url = 'https://s3-ap-southeast-1.amazonaws.com/www8.fairprice.com.sg/fpol/media/images/product/XL/'
+        pdtTitle = soup.find('h1').text
+        pdtDict['Title'] = pdtTitle
+        pdtWeightVol = soup.find('span',
+                                 class_='pdt_weightMg').text.strip()
+        pdtDict['Weight/Volumne'] = pdtWeightVol
+        pdtDict['Price'] = soup.find('span', class_='pdt_C_price').text.strip()
+        pdtDict['Key Info'] = soup.find(
+            'div', class_='pdt_desc_d_row pdpDesc clearfix').p.text.strip().split('•')[1:]
+
+        for i in soup.find_all('div', class_='pdt_desc_d_row clearfix'):
+            header = i.find('div', class_='pdr_name').text.strip()
+            content = i.find('div', class_='pdr_p_desc').text.strip()
+            if len(header) == 0:
+                content = i.find('div', class_='pdr_p_desc').text
+                cleaned_text = []
+                for char in re.sub('\s+', ' ', content).split(' '):
+                    if len(char) > 1:
+                        cleaned_text.append(char)
+                pdtDict[cleaned_text[0]] = cleaned_text[1:]
+            else:
+                pdtDict[header] = content
+
+        fairprice.insert(pdtDict)
 
     browser.quit()
     #### Selenium end ####

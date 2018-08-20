@@ -49,3 +49,4 @@ if __name__ == '__main__':
             'pdtURI': pdtDetails['details']['uri'],
             'pdtCategoryTags': pdtDetails['category_tags']
         }
+        redmart.insert(row)
