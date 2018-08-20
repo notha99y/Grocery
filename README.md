@@ -35,4 +35,4 @@ python src/make_mongodb_redmart.py
 ```
 
 # FairPrice
-TODO
+The FairPrice Script takes roughly 45 mins and 1.5 kB in size.

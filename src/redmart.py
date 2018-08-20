@@ -25,7 +25,7 @@ DATE = str(NOW.year).zfill(4) + str(NOW.month).zfill(2) + str(NOW.day).zfill(2)
 # meta data for saving
 FILENAME = DATE + "_data"
 FMT = '.json'
-SAVEPATH = os.path.join(os.getcwd(), 'data', 'raw')
+SAVEPATH = os.path.join(os.getcwd(), 'data', 'redmart', 'raw')
 SAVENAME = os.path.join(SAVEPATH, FILENAME+FMT)
 
 # meta data for requests

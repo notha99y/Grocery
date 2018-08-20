@@ -6,7 +6,7 @@ import json
 from pymongo import MongoClient
 
 if __name__ == '__main__':
-    data_path = os.path.join(os.getcwd(), 'data', 'raw')
+    data_path = os.path.join(os.getcwd(), 'data', 'redmart', 'raw')
     raw_jsons = glob.glob(os.path.join(data_path, '*.json'))
 
     print("Please select a raw data.json to put into mongodb")
