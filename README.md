@@ -1,4 +1,4 @@
-# Grocery Repo
+# Grocery Repo1
 This repo contains scripts to do web scraping of e-commerce grocery web pages. <br>
 This is done merely as a school project and we adhere to the robots.txt and ethics of being a [good webscrapper](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01). <br>
 
