@@ -6,8 +6,6 @@ import glob
 
 import datetime
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from utils import random_headers, make_dir, log_error, getBrowser, requestForPage
 
 from pymongo import MongoClient
@@ -143,9 +141,10 @@ def main():
         pdtTitle = soup.find('h1').text
         pdtDict['Product_url'] = productLink
         pdtDict['Title'] = pdtTitle
-        pdtWeightVol = soup.find('span',
-                                 class_='pdt_weightMg').text.strip()
+
         try:
+            pdtWeightVol = soup.find('span',
+                                     class_='pdt_weightMg').text.strip()
             pdtDict['Weight_Volume'] = pdtWeightVol
         except:
             pdtDict['Weight_Volume'] = "NA"
