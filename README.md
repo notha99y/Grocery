@@ -66,8 +66,8 @@ With this, you are set to do webscraping and some simple data analysis
 # Dockerfile
 TODO
 
-# RedMart
-Somethings you do can with the Redmart Scripts
+# RedMart (How to use)
+Currently, these are some of the things you do can with the Redmart Scripts
 
 - Scrape Redmart 
     - This would create a project directory called data/raw, scrapes the redmart webpage and saves it into a .json file
@@ -83,6 +83,12 @@ The redmart collection is roughly 60 MB in size and have ~ 62,000 unique items
 python src/make_mongodb_redmart.py
 ```
 ## Tableau Analysis
+For those who are familiar with Tableau could connect the MongoDB to Tableau. <br>
+
+[How to connect MongoDB to Tableau](https://www.mongodb.com/tableau)
+
+### Interactive Dashboard
+We have came up with an 
 [Interactive Dashboard](https://tinyurl.com/redmart-MILE) ( <-- Click )
 
 Go Full Screen for maximum viewing pleasure.
@@ -92,7 +98,7 @@ Go Full Screen for maximum viewing pleasure.
 
 
 # FairPrice
-The FairPrice Script takes roughly 45 mins and would create collection called fairprice of ~6 MB in size with ~6,500 unique items. <br>
+The FairPrice Script takes roughly 4 hours to run and would output a .csv file called $TODAY_DATE_links.csv (which contains all the products listing links of fairprice) create collection called fairprice of ~6 MB in size with ~6,500 unique items. <br>
 In order to run the script, you would need to do the following:
 - Get Selenium Chromedriver [download here](https://chromedriver.storage.googleapis.com/index.html?path=2.41/)
 - Unzip the chromedriver
@@ -111,6 +117,10 @@ TODO
 
 # MongoDB
 We could run some commands using the MongoDB shell. <br> Alternatively, the default MongoDB GUI called [Compass](https://www.mongodb.com/download-center?jmp=hero#compass) could do the job.  
+
+Screenshot of the GroceryDB and its collections
+![mongodb_preview](pictures/mongodb_screenshot.png)
+
 1. Open MongoDB shell
 ```
 mongo
