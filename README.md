@@ -114,7 +114,7 @@ python src/fairprice.py
 
 ### Interactive Dashboard
 We have came up with an 
-[Interactive Dashboard](https://tinyurl.com/fairprice-MILE) ( <-- Click )
+[Interactive Dashboard](https://tinyurl.com/ntuc-MILE) ( <-- Click )
 
 Go Full Screen for maximum viewing pleasure.
 
