@@ -112,6 +112,12 @@ With these, you are ready to run. The script would given you the following outpu
 python src/fairprice.py
 ```
 
+### Interactive Dashboard
+We have came up with an 
+[Interactive Dashboard](https://tinyurl.com/fairprice-MILE) ( <-- Click )
+
+Go Full Screen for maximum viewing pleasure.
+
 # Cold Storage
 TODO
 
@@ -119,6 +125,7 @@ TODO
 We could run some commands using the MongoDB shell. <br> Alternatively, the default MongoDB GUI called [Compass](https://www.mongodb.com/download-center?jmp=hero#compass) could do the job.  
 
 Screenshot of the GroceryDB and its collections
+
 ![mongodb_preview](pictures/mongodb_screenshot.png)
 
 1. Open MongoDB shell
