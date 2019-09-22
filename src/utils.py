@@ -62,11 +62,12 @@ def getBrowser():
     Returns a haedless chrome browser  of window size 19200x1080 
     controlled by selenium
     '''
+    # edit your path here
+    chrome_driver_path = '/home/dh/.chromedriver'
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--window-size=1920x1080")
-    chrome_driver = os.path.join(
-        os.getcwd(), 'seleniumdrivers', 'chromedriver')
+    chrome_driver = os.path.join(chrome_driver_path, 'chromedriver')
     # print(chrome_driver)
     browser = webdriver.Chrome(
         chrome_options=chrome_options, executable_path=chrome_driver)
