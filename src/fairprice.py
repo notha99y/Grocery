@@ -3,6 +3,7 @@ import time
 import os
 import re
 import glob
+import json
 
 import datetime
 from bs4 import BeautifulSoup
@@ -11,6 +12,7 @@ from utils import random_headers, make_dir, log_error, getBrowser, requestForPag
 from pymongo import MongoClient
 filename = "data"
 BASE_URL = 'https://www.fairprice.com.sg/'
+DATA_PATH = os.path.join(os.getcwd(), 'data', 'fairprice', 'raw')
 
 
 def getProductLinks():
@@ -124,13 +126,15 @@ def main():
                 allProductLinksinCategory.append(link.strip())
     else:
         print("Generating a .csv of product links to scrape from.")
-        print("This would rougly take around 35 mins depending on your")
+        print("This would rougly take around 35 mins depending on your network speed")
         allProductLinksinCategory, browser = getProductLinks()
 
     # Start - Getting all attributes in product links
-    client = MongoClient()
-    db = client.Grocery
-    fairprice = db.fairprice
+    res = input('Save as mongodb? (y/n): ')
+    if res == 'y':
+        client = MongoClient()
+        db = client.Grocery
+        fairprice = db.fairprice
 
     for productLink in allProductLinksinCategory:
         pdtDict = dict()
@@ -187,8 +191,28 @@ def main():
                 pdtDict[header] = content
         print("Pdt Dict")
         print(pdtDict)
-        fairprice.insert(pdtDict)
-
+        if res == 'y':
+            fairprice.insert(pdtDict)
+        else:
+            FMT = '.json'
+            NOW = datetime.datetime.now()
+            DATE = str(NOW.year).zfill(4) + \
+                str(NOW.month).zfill(2) + str(NOW.day).zfill(2)
+            FILENAME = DATE + '_products'
+            SAVENAME = os.path.join(DATA_PATH, FILENAME+FMT)
+            with open(SAVENAME, 'w+') as fp:
+                print("writing into json: {}".format(
+                    os.path.abspath(SAVENAME)))
+                existingProductsDict = json.load(fp)
+                existingProductsDict.update(pdtDict)
+                json.dump(existingProductsDict, fp)
+                # try:
+                #     existingProductsDict = json.load(fp)
+                #     existingProductsDict.update(pdtDict)
+                #     json.dump(existingProductsDict, fp)
+                # except BaseException:
+                #     print('-'*80)
+                #     json.dump(pdtDict, fp)
     browser.quit()
     #### Selenium end ####
 
